@@ -6,10 +6,13 @@ use SilverStripe\Core\Extension;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
-use TractorCow\Fluent\State\FluentState;
+use SilverStripe\Versioned\GraphQL\Operations\ReadVersions;
+use TractorCow\Fluent\State\FluentState;    
 
 /**
  * Available since SilverStripe 4.3.x
+ *
+ * @property ReadVersions $owner
  */
 class FluentReadVersionsExtension extends Extension
 {
@@ -25,7 +28,7 @@ class FluentReadVersionsExtension extends Extension
         $singleton = Injector::inst()->get($list->dataClass());
         $locale = $list->dataQuery()->getQueryParam('Fluent.Locale') ?: FluentState::singleton()->getLocale();
         if (!$singleton->hasExtension(FluentExtension::class)
-            || !$singleton->hasField('SourceLocale')
+            || !$singleton->hasField('Locale')
             || !$locale
         ) {
             return;
@@ -34,7 +37,7 @@ class FluentReadVersionsExtension extends Extension
         $locale = FluentState::singleton()->getLocale();
 
         $query = $list->dataQuery();
-        $query->having(['"SourceLocale" = ?' => $locale]);
+        $query->having(['"Locale" = ?' => $locale]);
 
         $list = $list->setDataQuery($query);
     }
