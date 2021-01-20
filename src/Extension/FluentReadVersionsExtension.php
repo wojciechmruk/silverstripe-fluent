@@ -28,7 +28,7 @@ class FluentReadVersionsExtension extends Extension
         $singleton = Injector::inst()->get($list->dataClass());
         $locale = $list->dataQuery()->getQueryParam('Fluent.Locale') ?: FluentState::singleton()->getLocale();
         if (!$singleton->hasExtension(FluentExtension::class)
-            || !$singleton->hasField('SourceLocale')
+            || !$singleton->hasField('Locale')
             || !$locale
         ) {
             return;
@@ -37,8 +37,12 @@ class FluentReadVersionsExtension extends Extension
         $locale = FluentState::singleton()->getLocale();
 
         $query = $list->dataQuery();
-        $query->having(['"SourceLocale" = ?' => $locale]);
+        $query->having(['"Locale" = ?' => $locale]);
 
         $list = $list->setDataQuery($query);
     }
 }
+
+
+
+
